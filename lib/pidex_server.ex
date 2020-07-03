@@ -17,19 +17,19 @@ defmodule Pidex.PdxServer do
     GenServer.cast(pid, {:put_ts, nil, nil})
   end
 
-  @spec set( GenServer.server(), Enum.t() ) :: :ok
+  @spec set(GenServer.server(), Enum.t()) :: :ok
   def set(pid, opts) do
     pidex = GenServer.call(pid, {:get, :pidex})
     pidex = struct!(pidex, opts)
     GenServer.cast(pid, {:put, :pidex, pidex})
   end
 
-  @spec settings( GenServer.server() ) :: :ok
+  @spec settings(GenServer.server()) :: :ok
   def settings(pid) do
     GenServer.call(pid, {:get, :pidex})
   end
 
-  @spec state( GenServer.server() ) :: any
+  @spec state(GenServer.server()) :: any
   def state(pid) do
     GenServer.call(pid, {:get, :state})
   end
@@ -45,7 +45,7 @@ defmodule Pidex.PdxServer do
     GenServer.call(pid, {:get, :output})
   end
 
-  @spec update_async(GenServer.server(), number, Pidex.timestamp() | nil ) :: :ok
+  @spec update_async(GenServer.server(), number, Pidex.timestamp() | nil) :: :ok
   def update_async(pid, process_value, ts \\ nil) when is_number(process_value) do
     GenServer.cast(pid, {:process_update, process_value, ts})
   end
@@ -68,15 +68,17 @@ defmodule Pidex.PdxServer do
     set_time(self())
 
     {:ok,
-     %{pidex: args[:pidex] || args[:settings] || %Pidex{},
+     %{
+       pidex: args[:pidex] || args[:settings] || %Pidex{},
        state: args[:state] || %Pidex.State{},
        ts_unit: ts_unit,
        ts_factor: args[:ts_factor] || 1.0,
-       output: nil}}
+       output: nil
+     }}
   end
 
   def handle_call({:get, key}, _from, proc_state) do
-    {:reply, Map.get(proc_state, key), proc_state }
+    {:reply, Map.get(proc_state, key), proc_state}
   end
 
   def handle_call({:process_update, process_value, ts}, _from, proc_state) do
@@ -92,7 +94,8 @@ defmodule Pidex.PdxServer do
   def handle_cast({:put_ts, ts, ts_unit}, proc_state) do
     # IO.puts "update_time: #{ts}"
     ts = ts || System.monotonic_time(proc_state.ts_unit || ts_unit)
-    state = %{ proc_state.state | ts: ts }
+    state = %{proc_state.state | ts: ts}
+
     proc_state =
       proc_state
       |> Map.put(:ts_unit, ts_unit || proc_state.ts_unit)
@@ -119,7 +122,6 @@ defmodule Pidex.PdxServer do
       |> Pidex.update()
 
     # IO.puts "pid out: #{inspect output} <#{inspect state}>"
-    %{ proc | state: state, output: output}
+    %{proc | state: state, output: output}
   end
 end
-

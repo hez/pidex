@@ -9,7 +9,7 @@ defmodule Pidex.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
-      package: package(),
+      package: package()
     ]
   end
 
@@ -34,12 +34,14 @@ defmodule Pidex.MixProject do
   defp package() do
     [
       files: [
-        "lib", "mix.exs", "README*", "LICENSE*"
+        "lib",
+        "mix.exs",
+        "README*",
+        "LICENSE*"
       ],
       maintainers: ["Jaremy Creechley"],
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/elcritch/pidex"}
     ]
   end
-
 end
