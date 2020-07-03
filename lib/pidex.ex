@@ -43,11 +43,11 @@ defmodule Pidex do
 
     output = kP*p_error! + kI*p_integral! + kD*p_derivative! + pid.bias
 
-    Logger.warn("pdx: state: #{inspect state}")
-    Logger.warn("pdx: process: #{inspect [process_value: process_value, set_point: target]}")
-    Logger.warn("pdx: integral: #{inspect [integral: state.integral, p_error_dt: (p_error! * dT)]}")
-    Logger.warn("pdx: calc: #{inspect [ts: ts, ts!: state.ts, del_ts:  ts - state.ts, dT: dT, p_error: p_error!, p_integral: p_integral!, p_derivative: p_derivative!]}")
-    Logger.warn("pdx: form: #{inspect [error: kP*p_error!, integral: kI*p_integral!, derivative: kD*p_derivative!]}")
+    Logger.debug("pdx: state: #{inspect state}")
+    Logger.debug("pdx: process: #{inspect [process_value: process_value, set_point: target]}")
+    Logger.debug("pdx: integral: #{inspect [integral: state.integral, p_error_dt: (p_error! * dT)]}")
+    Logger.debug("pdx: calc: #{inspect [ts: ts, ts!: state.ts, del_ts:  ts - state.ts, dT: dT, p_error: p_error!, p_integral: p_integral!, p_derivative: p_derivative!]}")
+    Logger.debug("pdx: form: #{inspect [error: kP*p_error!, integral: kI*p_integral!, derivative: kD*p_derivative!]}")
 
     # Implement anti-windup & overmax protection
     # cf https://apmonitor.com/pdc/index.php/Main/ProportionalIntegralDerivative
@@ -62,7 +62,7 @@ defmodule Pidex do
           {updated_value, p_integral!}
       end
 
-    Logger.warn("pdx: state!: #{inspect %Pidex.State{error: p_error!, integral: p_integral!, ts: ts}}")
+    Logger.debug("pdx: state!: #{inspect %Pidex.State{error: p_error!, integral: p_integral!, ts: ts}}")
     {output, %Pidex.State{error: p_error!, integral: p_integral!, ts: ts}}
   end
 end
